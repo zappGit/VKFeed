@@ -18,12 +18,10 @@ class FeedViewController: UIViewController {
             guard let feedResponse = feedResponse else {
                 return
             }
-            
             feedResponse.items.map { feedItem in
                 print(feedItem.date)
             }
-
-        }
         }
     }
+}
 
