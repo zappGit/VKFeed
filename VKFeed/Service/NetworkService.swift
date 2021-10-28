@@ -14,7 +14,6 @@ protocol Networking {
 
 class NetworkService: Networking {
    
-    
     private let authService: AuthService
     
     init(auth: AuthService = SceneDelegate.shared().authService) {
@@ -37,7 +36,7 @@ class NetworkService: Networking {
         allParams["v"] = API.version
         
         let url = self.url(from: path, params: allParams)
-        print(url)
+        print("\(url)")
         let request = URLRequest(url: url)
         let task = createDataTask(from: request, complition: complition)
         task.resume()
