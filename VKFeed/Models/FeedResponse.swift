@@ -27,11 +27,12 @@ struct FeedItem: Codable {
     let likes: CountableItems?
     let reposts: CountableItems?
     let views: CountableItems?
+    let attachments: [Attachment]?
     
     enum CodingKeys: String, CodingKey {
         case sourseId = "source_id"
         case postId = "post_id"
-        case text, date, comments, likes, reposts, views
+        case text, date, comments, likes, reposts, views, attachments
     }
 }
 
@@ -75,4 +76,39 @@ struct Group: Codable, ProfileRep {
     }
     
     var photo: String { return photo100 }
+}
+
+struct Attachment: Codable {
+    let photo: Photo?
+}
+
+struct Photo: Codable{
+    let sizes: [PhotoSize]
+    var height: Int {
+        return getPropperSize().height
+    }
+    var width: Int {
+        return getPropperSize().width
+    }
+    
+    var srcBig: String {
+        return getPropperSize().url
+    }
+    
+    private func getPropperSize() -> PhotoSize{
+        if let sizeX = sizes.first(where: { $0.type == "x"}) {
+            return sizeX
+        } else if let fallBackSize = sizes.last {
+            return fallBackSize
+        } else {
+            return PhotoSize(type: "wrong image", url: "wrong image", width: 0, height: 0)
+        }
+    }
+}
+
+struct PhotoSize: Codable {
+    let type: String
+    let url: String
+    let width: Int
+    let height: Int
 }
