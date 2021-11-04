@@ -78,6 +78,7 @@ struct Group: Codable, ProfileRep {
     var photo: String { return photo100 }
 }
 
+
 struct Attachment: Codable {
     let photo: Photo?
 }
