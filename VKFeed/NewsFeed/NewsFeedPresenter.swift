@@ -9,35 +9,38 @@
 import UIKit
 
 protocol NewsFeedPresentationLogic {
-  func presentData(response: NewsFeed.Model.Response.ResponseType)
+    func presentData(response: NewsFeed.Model.Response.ResponseType)
 }
 
 class NewsFeedPresenter: NewsFeedPresentationLogic {
-  weak var viewController: NewsFeedDisplayLogic?
+    weak var viewController: NewsFeedDisplayLogic?
+    var cellLayoutCalculator: FeedCellLayoutCalculatorProtocol = FeedCellLayoutCalculator()
+    
     let dateFormatter: DateFormatter = {
         let dt = DateFormatter()
         dt.locale = Locale(identifier: "ru_RU")
         dt.dateFormat = "d MMM 'в' HH:mm"
         return dt
     }()
-  
-  func presentData(response: NewsFeed.Model.Response.ResponseType) {
-      switch response {
-
-      case .presentNewsFeed(feed: let feed):
-          let cells = feed.items.map { feedItem in
-              cellViewModel(from: feedItem, profiles: feed.profiles, groups: feed.groups)
-          }
-          let feedViewModel = FeedViewModel.init(cells: cells)
-          viewController?.displayData(viewModel: .displayNewsFeed(feedViewModel: feedViewModel))
-      }
-  
-}
+    
+    func presentData(response: NewsFeed.Model.Response.ResponseType) {
+        switch response {
+            
+        case .presentNewsFeed(feed: let feed):
+            let cells = feed.items.map { feedItem in
+                cellViewModel(from: feedItem, profiles: feed.profiles, groups: feed.groups)
+            }
+            let feedViewModel = FeedViewModel.init(cells: cells)
+            viewController?.displayData(viewModel: .displayNewsFeed(feedViewModel: feedViewModel))
+        }
+        
+    }
     private func cellViewModel(from feedItem: FeedItem, profiles: [Profile], groups: [Group]) -> FeedViewModel.Cell {
         let profile = self.profile(for: feedItem.sourseId, profiles: profiles, groups: groups)
         let date = Date(timeIntervalSince1970: feedItem.date)
         let dateTitle = dateFormatter.string(from: date)
         let photoAttachment = self.photoAttachment(feedItem: feedItem)
+        let sizes = cellLayoutCalculator.sizes(postText: feedItem.text, photoAttachment: photoAttachment)
         return FeedViewModel.Cell.init(name: profile.name,
                                        date: dateTitle,
                                        text: feedItem.text,
@@ -46,8 +49,9 @@ class NewsFeedPresenter: NewsFeedPresentationLogic {
                                        shares: String(feedItem.reposts?.count ?? 0),
                                        views: String(feedItem.views?.count ?? 0),
                                        iconUrlString: profile.photo,
-                                       photoAttachment: photoAttachment)
-                                        
+                                       photoAttachment: photoAttachment,
+                                       sizes: sizes)
+        
     }
     
     private func profile(for sourseId: Int, profiles: [Profile], groups: [Group]) -> ProfileRep {
@@ -62,6 +66,8 @@ class NewsFeedPresenter: NewsFeedPresentationLogic {
         guard let photos = feedItem.attachments?.compactMap({ attachment in
             attachment.photo
         }), let firstPhoto = photos.first else { return nil }
-        return FeedViewModel.FeedCellPhotoAttachment.init(photoUrlString: firstPhoto.srcBig, height: firstPhoto.height, width: firstPhoto.width)
+        return FeedViewModel.FeedCellPhotoAttachment.init(photoUrlString: firstPhoto.srcBig,
+                                                          height: firstPhoto.height,
+                                                          width: firstPhoto.width)
     }
 }
