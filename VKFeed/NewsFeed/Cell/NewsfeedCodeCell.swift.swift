@@ -8,9 +8,15 @@
 import Foundation
 import UIKit
 
+protocol NewsfeedCodeCellDelegate: AnyObject {
+    func revealPost(for cell: NewsFeedCodeCell)
+}
+
 final class NewsFeedCodeCell: UITableViewCell {
     
     static let reuseId = "NewsfeedCodeCell"
+    weak var delegate: NewsfeedCodeCellDelegate?
+    
     //Первый слой
     let cardView: UIView = {
         let view = UIView()
@@ -35,6 +41,17 @@ final class NewsFeedCodeCell: UITableViewCell {
         return label
     }()
     
+    let moreButton: UIButton = {
+       let button = UIButton()
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+        button.setTitleColor(.blue, for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.contentVerticalAlignment = .center
+        button.setTitle("Кнопка", for: .normal)
+      
+        return button
+    }()
+    
     let postImageView: WebImageView = {
         let imageView = WebImageView()
         return imageView
@@ -50,6 +67,8 @@ final class NewsFeedCodeCell: UITableViewCell {
     let iconImageView: WebImageView = {
         let imageView = WebImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = Constants.topViewHeight / 2
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -154,17 +173,32 @@ final class NewsFeedCodeCell: UITableViewCell {
         return label
     }()
     
+    override func prepareForReuse() {
+        iconImageView.set(imgUrl: nil)
+        postImageView.set(imgUrl: nil)
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         backgroundColor = .clear
         selectionStyle = .none
+    
+        moreButton.isEnabled = true
+        moreButton.isPointerInteractionEnabled = true
+        moreButton.isUserInteractionEnabled = true
+        moreButton.addTarget(self, action: #selector(touched), for: .touchUpInside)
         
         overlayFirstLayer()//первый слой
         overlaySecondLayer()//второй слой
         overlayThirdLayerTop()//третий слой
         overlayThirdLayerBottom()
         overlayFourthLayer()//четвертый слой
+    }
+    
+    @objc func touched() {
+        print("123")
+        delegate?.revealPost(for: self)
     }
     
     func set(viewModel: FeedCellViewModel) {
@@ -180,6 +214,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         postLabel.frame = viewModel.sizes.postLabelFrame
         postImageView.frame = viewModel.sizes.attachmentFrame
         bottomView.frame = viewModel.sizes.bottomView
+        moreButton.frame = viewModel.sizes.moreButton
         
         if let photoAttachment = viewModel.photoAttachment{
             postImageView.set(imgUrl: photoAttachment.photoUrlString)
@@ -272,17 +307,20 @@ final class NewsFeedCodeCell: UITableViewCell {
     func overlaySecondLayer() {
         cardView.addSubview(topView)
         cardView.addSubview(postLabel)
+        cardView.addSubview(moreButton)
         cardView.addSubview(postImageView)
         cardView.addSubview(bottomView)
         
+        //top constraints
         topView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 8).isActive = true
         topView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -8).isActive = true
         topView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 8).isActive = true
         topView.heightAnchor.constraint(equalToConstant: Constants.topViewHeight).isActive = true
+        //остальные выставляются автоматически в NewsfeedLayoutsCalc
     }
     
     func overlayFirstLayer() {
-        addSubview(cardView)
+        contentView.addSubview(cardView)
         cardView.fillSuperview(padding: Constants.cardInserts)
     }
     
@@ -290,3 +328,10 @@ final class NewsFeedCodeCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+//extension UITableViewCell {
+//    open override func addSubview(_ view: UIView) {
+//        super.addSubview(view)
+//        sendSubviewToBack(contentView)
+//    }
+//}

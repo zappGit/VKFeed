@@ -17,5 +17,8 @@ struct Constants {
     static let bottomViewViewHeight: CGFloat = 40
     static let bottomViewViewWidth: CGFloat = 80
     static let bottomViewViewsIconSize: CGFloat = 24
-    
+    static let postLimitsLines: CGFloat = 8
+    static let postLines: CGFloat = 6
+    static let moreButtonSize = CGSize(width: 170, height: 30)
+    static let moreButtonsInserts = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
 }
