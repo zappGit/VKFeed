@@ -197,7 +197,6 @@ final class NewsFeedCodeCell: UITableViewCell {
     }
     
     @objc func touched() {
-        print("123")
         delegate?.revealPost(for: self)
     }
     

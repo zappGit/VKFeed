@@ -15,7 +15,7 @@ protocol NewsFeedDisplayLogic: AnyObject {
 class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCodeCellDelegate {
   var interactor: NewsFeedBusinessLogic?
   var router: (NSObjectProtocol & NewsFeedRoutingLogic)?
-  
+    //модель ленты новостей, как массив ячеек, заполненных согласно модели ячейки
     private var feedViewModel = FeedViewModel.init(cells: [])
     
     @IBOutlet weak var table: UITableView!
@@ -42,23 +42,32 @@ class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCo
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
-      table.register(UINib(nibName: "NewsfeedCell", bundle: nil), forCellReuseIdentifier: NewsfeedCell.reuseId)
+      //table.register(UINib(nibName: "NewsfeedCell", bundle: nil), forCellReuseIdentifier: NewsfeedCell.reuseId)
+      //Регистрируем ячеку
       table.register(NewsFeedCodeCell.self, forCellReuseIdentifier: NewsFeedCodeCell.reuseId)
       table.separatorStyle = .none
       table.backgroundColor = .clear
       view.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+      //запрос итератору
       interactor?.makeRequest(request: .getNewsfeed)
   }
   
   func displayData(viewModel: NewsFeed.Model.ViewModel.ViewModelData) {
       switch viewModel {
-          
       case .displayNewsFeed(feedViewModel: let feedViewModel):
           self.feedViewModel = feedViewModel
           table.reloadData()
       }
   }
-  
+    //MARK: NewsfeedCodeCellDelegate
+    //передаем ячейку в которой нажили кнопку показать весь текст
+    func revealPost(for cell: NewsFeedCodeCell) {
+        //получаем индекс ячейки
+        guard let indexPath = table.indexPath(for: cell) else { return }
+        let cellViewModel = feedViewModel.cells[indexPath.row]
+        //делаем запрос итератору
+        interactor?.makeRequest(request: .revealPostId(postId: cellViewModel.postId))
+    }
 }
 
 extension NewsFeedViewController: UITableViewDelegate, UITableViewDataSource {
@@ -70,7 +79,9 @@ extension NewsFeedViewController: UITableViewDelegate, UITableViewDataSource {
 //        let cell = tableView.dequeueReusableCell(withIdentifier: NewsfeedCell.reuseId, for: indexPath) as! NewsfeedCell
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsFeedCodeCell.reuseId, for: indexPath) as! NewsFeedCodeCell
         let cellViewModel = feedViewModel.cells[indexPath.row]
+        //заполняем ячейку полученными данными
         cell.set(viewModel: cellViewModel)
+        //делаем ячейку делегатом для кнопки показать больше текста
         cell.delegate = self
         return cell
     }
@@ -78,12 +89,13 @@ extension NewsFeedViewController: UITableViewDelegate, UITableViewDataSource {
    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cellViewModel = feedViewModel.cells[indexPath.row]
+        //автоматически задаем высоту ячейки, согласно подсчитанным данным
         return cellViewModel.sizes.totalHeight
         
     }
-    //MARK: NewsfeedCodeCellDelegate
-    func revealPost(for cell: NewsFeedCodeCell) {
-        print("work")
+    //вспомогательная функция для упрощения работы приложения по высчитываю высоты ячейки при нажатии на кнопку показать больше
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let cellViewModel = feedViewModel.cells[indexPath.row]
+        return cellViewModel.sizes.totalHeight
     }
-    
 }
