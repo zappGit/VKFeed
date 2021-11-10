@@ -62,6 +62,8 @@ final class NewsFeedCodeCell: UITableViewCell {
         return view
     }()
     
+    let collectionView = GallaryCollectionView()
+    
     //Третий слой topView
     
     let iconImageView: WebImageView = {
@@ -211,15 +213,23 @@ final class NewsFeedCodeCell: UITableViewCell {
         viewsLabel.text = viewModel.views
         
         postLabel.frame = viewModel.sizes.postLabelFrame
-        postImageView.frame = viewModel.sizes.attachmentFrame
+        
         bottomView.frame = viewModel.sizes.bottomView
         moreButton.frame = viewModel.sizes.moreButton
         
-        if let photoAttachment = viewModel.photoAttachment{
+        if let photoAttachment = viewModel.photoAttachments.first, viewModel.photoAttachments.count == 1 {
             postImageView.set(imgUrl: photoAttachment.photoUrlString)
             postImageView.isHidden = false
+            collectionView.isHidden = true
+            postImageView.frame = viewModel.sizes.attachmentFrame
+        } else if viewModel.photoAttachments.count > 1 {
+            collectionView.frame = viewModel.sizes.attachmentFrame
+            collectionView.isHidden = false
+            postImageView.isHidden = true
+            collectionView.set(photos: viewModel.photoAttachments)
         } else {
             postImageView.isHidden = true
+            collectionView.isHidden = true
         }
     }
     
@@ -306,6 +316,7 @@ final class NewsFeedCodeCell: UITableViewCell {
     func overlaySecondLayer() {
         cardView.addSubview(topView)
         cardView.addSubview(postLabel)
+        cardView.addSubview(collectionView)
         cardView.addSubview(moreButton)
         cardView.addSubview(postImageView)
         cardView.addSubview(bottomView)
