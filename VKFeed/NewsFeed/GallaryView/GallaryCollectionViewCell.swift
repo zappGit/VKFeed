@@ -15,8 +15,8 @@ class GallaryCollectionViewCell: UICollectionViewCell {
     let myImageView: WebImageView = {
         let image = WebImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.contentMode = .scaleAspectFit
-        image.backgroundColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
+        image.contentMode = .scaleAspectFill
+        image.backgroundColor = UIColor.white
         return image
     }()
     override init(frame: CGRect){

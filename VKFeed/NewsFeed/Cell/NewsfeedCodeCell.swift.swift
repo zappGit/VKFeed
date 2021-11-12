@@ -47,7 +47,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         button.setTitleColor(.blue, for: .normal)
         button.contentHorizontalAlignment = .left
         button.contentVerticalAlignment = .center
-        button.setTitle("Кнопка", for: .normal)
+        button.setTitle("Показать больше...", for: .normal)
       
         return button
     }()
@@ -211,9 +211,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         commentsLabel.text = viewModel.comments
         sharesLabel.text = viewModel.shares
         viewsLabel.text = viewModel.views
-        
         postLabel.frame = viewModel.sizes.postLabelFrame
-        
         bottomView.frame = viewModel.sizes.bottomView
         moreButton.frame = viewModel.sizes.moreButton
         

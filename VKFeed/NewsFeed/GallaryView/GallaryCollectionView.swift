@@ -12,13 +12,17 @@ class GallaryCollectionView: UICollectionView, UICollectionViewDelegate, UIColle
     var photos = [FeedCellPhotoAttachmentViewModel]()
 
     init() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        super.init(frame: .zero, collectionViewLayout: layout)
+        let rowLayout = RowLayout()
+        super.init(frame: .zero, collectionViewLayout: rowLayout)
         delegate = self
         dataSource = self
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
         register(GallaryCollectionViewCell.self, forCellWithReuseIdentifier: GallaryCollectionViewCell.reuseId)
-        backgroundColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
+        backgroundColor = UIColor.white
+        if let rowLayout = collectionViewLayout as? RowLayout {
+            rowLayout.delegate = self
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -27,6 +31,7 @@ class GallaryCollectionView: UICollectionView, UICollectionViewDelegate, UIColle
     
     func set(photos: [FeedCellPhotoAttachmentViewModel]){
         self.photos = photos
+        contentOffset = CGPoint.zero
         reloadData()
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -37,5 +42,19 @@ class GallaryCollectionView: UICollectionView, UICollectionViewDelegate, UIColle
         let cell = dequeueReusableCell(withReuseIdentifier: GallaryCollectionViewCell.reuseId, for: indexPath) as! GallaryCollectionViewCell
         cell.set(imageUrl: photos[indexPath.row].photoUrlString)
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: frame.width, height: frame.height)
+    }
+}
+
+
+
+extension GallaryCollectionView: RowLayoutDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, photoAtIndexPath indexPath: IndexPath) -> CGSize {
+        let width = photos[indexPath.row].width
+        let height = photos[indexPath.row].height
+        return CGSize(width: width, height: height)
     }
 }
