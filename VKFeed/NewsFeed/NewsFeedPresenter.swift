@@ -36,6 +36,9 @@ class NewsFeedPresenter: NewsFeedPresentationLogic {
             //заполняем массивом заполненных ячеек модель новостной ленты и передаем ее во вью контроллер
             let feedViewModel = FeedViewModel.init(cells: cells)
             viewController?.displayData(viewModel: .displayNewsFeed(feedViewModel: feedViewModel))
+        case .presentUserInfo(user: let user):
+            let userViewModel = UserViewModel.init(photoxUrlString: user?.photo100)
+            viewController?.displayData(viewModel: .displayUser(userViewModel: userViewModel))
         }
     }
     //получаем новость, массив профилей и массив групп, а так же масстив постов которые надо раскрыть

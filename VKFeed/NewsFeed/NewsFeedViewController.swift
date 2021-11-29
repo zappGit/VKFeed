@@ -14,6 +14,7 @@ protocol NewsFeedDisplayLogic: AnyObject {
 
 class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCodeCellDelegate {
   var interactor: NewsFeedBusinessLogic?
+    private var titleView = TitleView()
   var router: (NSObjectProtocol & NewsFeedRoutingLogic)?
     //модель ленты новостей, как массив ячеек, заполненных согласно модели ячейки
     private var feedViewModel = FeedViewModel.init(cells: [])
@@ -48,15 +49,25 @@ class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCo
       table.separatorStyle = .none
       table.backgroundColor = .clear
       view.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+      setupTopBar()
       //запрос итератору
       interactor?.makeRequest(request: .getNewsfeed)
+      interactor?.makeRequest(request: .getUser)
   }
+    
+    private func setupTopBar() {
+        self.navigationController?.hidesBarsOnSwipe = true
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationItem.titleView = titleView
+    }
   
   func displayData(viewModel: NewsFeed.Model.ViewModel.ViewModelData) {
       switch viewModel {
       case .displayNewsFeed(feedViewModel: let feedViewModel):
           self.feedViewModel = feedViewModel
           table.reloadData()
+      case .displayUser(userViewModel: let userViewModel):
+          titleView.set(userViewModeL: userViewModel)
       }
   }
     //MARK: NewsfeedCodeCellDelegate
