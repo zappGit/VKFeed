@@ -16,37 +16,29 @@ class NewsFeedInteractor: NewsFeedBusinessLogic {
     
     var presenter: NewsFeedPresentationLogic?
     var service: NewsFeedService?
-    private var revealedPostId = [Int]()
-    private var feedResponse: FeedResponse?
-    private var fetcher: DataFetcher = NetworkDataFetcher(networking: NetworkService())
-    
+
     func makeRequest(request: NewsFeed.Model.Request.RequestType) {
         if service == nil {
             service = NewsFeedService()
         }
         switch request {
-        //кейс получить всю новостную ленту
+            
         case .getNewsfeed:
-            //делаем сетевой запрос
-            fetcher.getFeed {[weak self] feedResponse in
-                self?.feedResponse = feedResponse
-                self?.presentFeed()
-            }
-        //кейс по нажатию кнопки показать больше текста
+            service?.getFeed(response: {[weak self] (revealPostId, feed) in
+                self?.presenter?.presentData(response: .presentNewsFeed(feed: feed, revealedPostId: revealPostId))
+            })
         case .revealPostId(postId: let postId):
-            revealedPostId.append(postId)
-            presentFeed()
+            service?.revealPostIds(forPostId: postId, response: { [weak self] revealPostId, feed in
+                self?.presenter?.presentData(response: .presentNewsFeed(feed: feed, revealedPostId: revealPostId))
+            })
         case .getUser:
-            fetcher.getUser { user in
-                self.presenter?.presentData(response: .presentUserInfo(user: user))
-                
-            }
+            service?.getUser(response: { [weak self] user in
+                self?.presenter?.presentData(response: .presentUserInfo(user: user))
+            })
+        case .getnextButch:
+            service?.getNextButch(complition: { [weak self] revealPostId, feed in
+                self?.presenter?.presentData(response: .presentNewsFeed(feed: feed, revealedPostId: revealPostId))
+            })
         }
-        
-    }
-    //делаем запрос в презентер
-    private func presentFeed(){
-        guard let feedResponse = feedResponse else { return }
-        presenter?.presentData(response: .presentNewsFeed(feed: feedResponse, revealedPostId: revealedPostId))
     }
 }

@@ -34,6 +34,11 @@ class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCo
     router.viewController     = viewController
   }
   
+    private var refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        refresh.addTarget(self, action: #selector(refresher), for: .valueChanged)
+        return refresh
+    }()
   // MARK: Routing
   
 
@@ -43,22 +48,35 @@ class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCo
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
-      //table.register(UINib(nibName: "NewsfeedCell", bundle: nil), forCellReuseIdentifier: NewsfeedCell.reuseId)
-      //Регистрируем ячеку
-      table.register(NewsFeedCodeCell.self, forCellReuseIdentifier: NewsFeedCodeCell.reuseId)
-      table.separatorStyle = .none
-      table.backgroundColor = .clear
+      
       view.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
       setupTopBar()
+      setupTable()
       //запрос итератору
       interactor?.makeRequest(request: .getNewsfeed)
       interactor?.makeRequest(request: .getUser)
   }
     
+    private func setupTable(){
+        //table.register(UINib(nibName: "NewsfeedCell", bundle: nil), forCellReuseIdentifier: NewsfeedCell.reuseId)
+        //Регистрируем ячеку
+        let topInsert: CGFloat = 8
+        table.contentInset.top = topInsert
+        
+        table.register(NewsFeedCodeCell.self, forCellReuseIdentifier: NewsFeedCodeCell.reuseId)
+        table.separatorStyle = .none
+        table.backgroundColor = .clear
+        table.addSubview(refreshControl)
+    }
+    
     private func setupTopBar() {
         self.navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationItem.titleView = titleView
+    }
+    
+    @objc private func refresher() {
+        interactor?.makeRequest(request: .getNewsfeed)
     }
   
   func displayData(viewModel: NewsFeed.Model.ViewModel.ViewModelData) {
@@ -66,10 +84,18 @@ class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCo
       case .displayNewsFeed(feedViewModel: let feedViewModel):
           self.feedViewModel = feedViewModel
           table.reloadData()
+          refreshControl.endRefreshing()
       case .displayUser(userViewModel: let userViewModel):
           titleView.set(userViewModeL: userViewModel)
       }
   }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if scrollView.contentOffset.y > scrollView.contentSize.height / 1.1 {
+            interactor?.makeRequest(request: .getnextButch)
+        }
+    }
+    
     //MARK: NewsfeedCodeCellDelegate
     //передаем ячейку в которой нажили кнопку показать весь текст
     func revealPost(for cell: NewsFeedCodeCell) {

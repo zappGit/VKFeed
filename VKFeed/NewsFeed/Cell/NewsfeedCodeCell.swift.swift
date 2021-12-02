@@ -33,12 +33,26 @@ final class NewsFeedCodeCell: UITableViewCell {
         return view
     }()
     
-    let postLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = Constants.postLabelFont
-        label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        return label
+//    let postLabel: UILabel = {
+//        let label = UILabel()
+//        label.numberOfLines = 0
+//        label.font = Constants.postLabelFont
+//        label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+//        return label
+//    }()
+    let postLabel: UITextView = {
+       let text = UITextView()
+        text.font = Constants.postLabelFont
+        text.isScrollEnabled = false
+        text.isSelectable = true
+        text.isUserInteractionEnabled = true
+        text.isEditable = false
+        text.dataDetectorTypes = UIDataDetectorTypes.all
+        
+        let padding = text.textContainer.lineFragmentPadding
+        text.textContainerInset = UIEdgeInsets(top: 0, left: -padding, bottom: 0, right: -padding)
+        
+        return text
     }()
     
     let moreButton: UIButton = {

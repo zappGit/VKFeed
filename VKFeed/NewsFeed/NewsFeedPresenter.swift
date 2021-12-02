@@ -58,19 +58,33 @@ class NewsFeedPresenter: NewsFeedPresentationLogic {
         //получаем размеры каждого элемента новости
         let sizes = cellLayoutCalculator.sizes(postText: feedItem.text, photoAttachments: photoAttachments, isFullSize: isFullSized)
         //заполняем мадель новостной ленты полученной информацией
+        let postText = feedItem.text?.replacingOccurrences(of: "<br>", with: "\n")
         return FeedViewModel.Cell.init(postId: feedItem.postId,
                                        name: profile.name,
                                        date: dateTitle,
-                                       text: feedItem.text,
-                                       likes: String(feedItem.likes?.count ?? 0),
-                                       comments: String(feedItem.comments?.count ?? 0),
-                                       shares: String(feedItem.reposts?.count ?? 0),
-                                       views: String(feedItem.views?.count ?? 0),
+                                       text: postText,
+                                       likes: formatedCounter(counter: feedItem.likes?.count),
+                                       comments: formatedCounter(counter: feedItem.comments?.count),
+                                       shares: formatedCounter(counter: feedItem.reposts?.count),
+                                       views: formatedCounter(counter: feedItem.views?.count),
                                        iconUrlString: profile.photo,
                                        photoAttachments: photoAttachments,
                                        sizes: sizes)
         
     }
+    
+    private func formatedCounter(counter: Int?) -> String? {
+        guard let counter = counter, counter > 0 else { return nil }
+        var counterString = String(counter)
+        if 4...6 ~= counterString.count {
+            counterString = String(counterString.dropLast(3)) + "K"
+        } else if counterString.count > 6 {
+            counterString = String(counterString.dropLast(6)) + "M"
+        }
+        return counterString
+    }
+    
+    
     
     //по sourseId понимаем от кого данный пост, от группы или пользователя
     private func profile(for sourseId: Int, profiles: [Profile], groups: [Group]) -> ProfileRep {
