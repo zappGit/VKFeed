@@ -36,6 +36,7 @@ class NewsFeedInteractor: NewsFeedBusinessLogic {
                 self?.presenter?.presentData(response: .presentUserInfo(user: user))
             })
         case .getnextButch:
+            self.presenter?.presentData(response: .presentFooterLoader)
             service?.getNextButch(complition: { [weak self] revealPostId, feed in
                 self?.presenter?.presentData(response: .presentNewsFeed(feed: feed, revealedPostId: revealPostId))
             })
