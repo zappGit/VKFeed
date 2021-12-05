@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UIView {
-    
+    //для констрейнтов
     func fillSuperview(padding: UIEdgeInsets) {
         anchor(top: superview?.topAnchor, leading: superview?.leadingAnchor, bottom: superview?.bottomAnchor, trailing: superview?.trailingAnchor, padding: padding)
     }

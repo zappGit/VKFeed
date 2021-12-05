@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 extension String {
+    //позволяет получить высоту текста исходя из размера шрифта
     func height(width: CGFloat, font: UIFont) -> CGFloat {
         let textSize = CGSize(width: width, height: .greatestFiniteMagnitude)
         let size = self.boundingRect(with: textSize,

@@ -24,7 +24,6 @@ struct FeedResponse: Codable {
 }
 
 struct FeedItem: Codable {
-    
     let sourseId: Int
     let postId: Int
     let text: String?
@@ -50,11 +49,11 @@ protocol ProfileRep {
     var id: Int { get }
     var name: String { get }
     var photo: String { get }
-    
 }
+
 struct Profile: Codable, ProfileRep {
     var name: String { return firstName + " " + lastName }
-    var photo: String { return photo100}
+    var photo: String { return photo100 }
     
     let id: Int
     let firstName: String
@@ -70,7 +69,6 @@ struct Profile: Codable, ProfileRep {
 }
 
 struct Group: Codable, ProfileRep {
-    
     let id: Int
     let name: String
     let photo100: String
@@ -84,7 +82,6 @@ struct Group: Codable, ProfileRep {
     var photo: String { return photo100 }
 }
 
-
 struct Attachment: Codable {
     let photo: Photo?
 }
@@ -97,7 +94,6 @@ struct Photo: Codable{
     var width: Int {
         return getPropperSize().width
     }
-    
     var srcBig: String {
         return getPropperSize().url
     }

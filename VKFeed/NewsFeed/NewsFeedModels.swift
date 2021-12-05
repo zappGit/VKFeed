@@ -9,7 +9,7 @@
 import UIKit
 
 enum NewsFeed {
-   
+  //модель для Clean swift
   enum Model {
     struct Request {
       enum RequestType {
@@ -36,7 +36,7 @@ enum NewsFeed {
   }
   
 }
-
+// для Title View
 struct UserViewModel: TitleViewViewModel {
     var photoxUrlString: String?
 }

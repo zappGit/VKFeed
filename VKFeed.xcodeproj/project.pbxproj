@@ -116,9 +116,9 @@
 		B80738F92729A33A002B46B8 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				B80738FC2729A405002B46B8 /* NewsfeedCell.xib */,
 				B80738FA2729A35D002B46B8 /* NewsfeedCell.swift */,
 				B8989C4A2734415800BDE2D0 /* NewsfeedLayoutCalc.swift */,
-				B80738FC2729A405002B46B8 /* NewsfeedCell.xib */,
 				B8989C4E2735810600BDE2D0 /* NewsfeedCodeCell.swift.swift */,
 				B8989C5227359C7F00BDE2D0 /* Constants.swift */,
 			);
@@ -220,8 +220,8 @@
 			isa = PBXGroup;
 			children = (
 				B8E5701D2721D145007F503B /* AuthService.swift */,
-				B8E5702827248082007F503B /* NetworkService.swift */,
 				B8E5702A27248148007F503B /* API.swift */,
+				B8E5702827248082007F503B /* NetworkService.swift */,
 				B8E5702F2725C2B1007F503B /* NetworkDataFetcher.swift */,
 			);
 			path = Service;
@@ -239,16 +239,16 @@
 		B8E5703127270446007F503B /* NewsFeed */ = {
 			isa = PBXGroup;
 			children = (
-				B8DAD60E275B9F8C000EC11F /* Footer VIew */,
-				B86A2D5527552617000D2EDD /* Title View */,
-				B8989C54273C258D00BDE2D0 /* GallaryView */,
-				B8E5703627270486007F503B /* NewsFeedViewController.swift */,
 				B8E5704027270B8E007F503B /* NewsFeedViewController.storyboard */,
+				B8E5703627270486007F503B /* NewsFeedViewController.swift */,
 				B8E5703727270486007F503B /* NewsFeedInteractor.swift */,
 				B8E5703227270486007F503B /* NewsFeedPresenter.swift */,
 				B8E5703527270486007F503B /* NewsFeedModels.swift */,
 				B8E5703327270486007F503B /* NewsFeedWorker.swift */,
 				B8E5703427270486007F503B /* NewsFeedRouter.swift */,
+				B86A2D5527552617000D2EDD /* Title View */,
+				B8DAD60E275B9F8C000EC11F /* Footer VIew */,
+				B8989C54273C258D00BDE2D0 /* GallaryView */,
 				B80738F92729A33A002B46B8 /* Cell */,
 			);
 			path = NewsFeed;

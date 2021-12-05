@@ -36,12 +36,10 @@ class NetworkService: Networking {
         allParams["v"] = API.version
         
         let url = self.url(from: path, params: allParams)
-        print("\(url)")
         let request = URLRequest(url: url)
         let task = createDataTask(from: request, complition: complition)
         task.resume()
     }
-    
     
     private func createDataTask(from request: URLRequest, complition: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask {
         return URLSession.shared.dataTask(with: request) { data, responce, error in

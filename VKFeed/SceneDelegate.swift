@@ -24,10 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, AuthServiseDelegate {
             VKSdk.processOpen(url, fromApplication: UIApplication.OpenURLOptionsKey.sourceApplication.rawValue)
         }
     }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
@@ -66,21 +64,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, AuthServiseDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
+    
 //MARK: AuthServiceDelegate
     func authServiceShouldShow(viewController: UIViewController) {
-        print(#function)
         window?.rootViewController?.present(viewController, animated: true, completion: nil)
     }
     
     func authServiceSignIn() {
-        print(#function)
         let feedVC = UIStoryboard(name: "NewsFeedViewController", bundle: nil).instantiateInitialViewController() as! NewsFeedViewController
         let navVc = UINavigationController(rootViewController: feedVC)
         window?.rootViewController = navVc
     }
     
     func authServiceSignInDidFail() {
-        print(#function)
     }
 
 }

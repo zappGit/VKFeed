@@ -14,7 +14,6 @@ class NewsFeedService {
     var networking: Networking
     var fetcher: DataFetcher
     
-    
     private var revealedPostId = [Int]()
     private var feedResponse: FeedResponse?
     private var newForm: String?
