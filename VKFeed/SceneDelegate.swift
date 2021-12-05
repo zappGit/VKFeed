@@ -12,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, AuthServiseDelegate {
     
     var window: UIWindow?
     var authService: AuthService!
+
     
     static func shared() -> SceneDelegate {
         let scene = UIApplication.shared.connectedScenes.first

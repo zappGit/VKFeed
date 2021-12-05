@@ -70,7 +70,14 @@ class NewsFeedViewController: UIViewController, NewsFeedDisplayLogic, NewsfeedCo
         table.tableFooterView = footerView
     }
     
+   
+    
     private func setupTopBar() {
+        
+        let topBar = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        self.view.addSubview(topBar)
+        topBar.backgroundColor = .white
+        
         self.navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationItem.titleView = titleView

@@ -33,13 +33,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         return view
     }()
     
-//    let postLabel: UILabel = {
-//        let label = UILabel()
-//        label.numberOfLines = 0
-//        label.font = Constants.postLabelFont
-//        label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-//        return label
-//    }()
+//для перехода ссылок
     let postLabel: UITextView = {
        let text = UITextView()
         text.font = Constants.postLabelFont
@@ -351,9 +345,3 @@ final class NewsFeedCodeCell: UITableViewCell {
     }
 }
 
-//extension UITableViewCell {
-//    open override func addSubview(_ view: UIView) {
-//        super.addSubview(view)
-//        sendSubviewToBack(contentView)
-//    }
-//}
